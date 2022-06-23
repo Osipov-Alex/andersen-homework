@@ -15,13 +15,16 @@ const makeObjectDeepCopy = (object) => {
 const selectFromInterval = (arr, number_1, number_2) => {
   const {minValue, maxValue} = number_1 < number_2 ? {minValue: number_1, maxValue: number_2} : {minValue: number_2, maxValue: number_1};
 
-  if(!Array.isArray(arr) || typeof (number_1) !== 'number' || typeof (number_2) !== 'number') {
-    throw new Error('Ошибка!');
-  } 
+  if(!Array.isArray(arr)) {
+    throw new Error('First argument must be an arrow');
+  }
+  if (typeof (number_1) !== 'number' || typeof (number_2) !== 'number') {
+    throw new Error('Values must be a number');
+  }
 
   return arr.filter(elem => {
     if(typeof (elem) !== 'number') {
-      throw new Error('Ошибка!');
+      throw new Error('Array element must be a number!');
     }
 
     return minValue <= elem && elem <= maxValue
@@ -38,8 +41,11 @@ myIterable[Symbol.iterator] = function () {
 
   return {
     next() {
-      if(rangeEnd < rangeStart || typeof (rangeStart) !== 'number' || typeof (rangeEnd) !== 'number') {
-        throw new Error('Ошибка!')
+      if(rangeEnd < rangeStart) {
+        throw new Error('FROM cannnot be greater than TO')
+      }
+      if (typeof (rangeStart) !== 'number' || typeof (rangeEnd) !== 'number') {
+        throw new Error('Values must be a number!')
       }
       if(currentValue <= rangeEnd) {
         return {
