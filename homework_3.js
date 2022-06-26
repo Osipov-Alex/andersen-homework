@@ -1,4 +1,4 @@
-Array.prototype.MyFilter = function(callback, thisArg) {
+Array.prototype.myFilter = function(callback, thisArg) {
 
   const filteredArray = [];
   
