@@ -4,7 +4,7 @@ class Stack {
       throw new Error('Maxstacksize must be a number');
     }
     this.maxStackSize = maxStackSize;
-    this.stack = [];
+    this.stack = {};
     this.count = 0;
   }
 
@@ -36,11 +36,7 @@ class Stack {
   }
 
   toArray = () => {
-    const newArray = []
-    for (let i = 0; i <= this.count - 1; i++) {
-      newArray[i] = this.stack[i];
-    }
-    return newArray
+    return Object.values(this.stack)
   }
 
   static fromIterable = (iterable) => {
