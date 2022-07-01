@@ -1,6 +1,6 @@
 class Stack {
   constructor(maxStackSize = 10) {
-    if (typeof maxStackSize !== 'number') {
+    if (typeof maxStackSize !== 'number' || maxStackSize < 0 || !isFinite(maxStackSize) || isNaN(maxStackSize)) {
       throw new Error('Maxstacksize must be a number');
     }
     this.maxStackSize = maxStackSize;
@@ -38,7 +38,7 @@ class Stack {
   toArray = () => {
     const newArray = []
     for (let i = 0; i <= this.count - 1; i++) {
-      newArray[i] = this.stack[this.count - i - 1];
+      newArray[i] = this.stack[i];
     }
     return newArray
   }
