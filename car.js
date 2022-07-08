@@ -1,4 +1,13 @@
 class Car {
+  #currentYear = new Date().getFullYear();
+  #ERROR_MESSAGE = {
+    'brand': 'Неверный бренд',
+    'model': 'Неправильная модель',
+    'yearOfManufacturing': 'Неверный год производства',
+    'maxSpeed': 'Неправильная максимальная скорость',
+    'maxFuelVolume': 'Неверно указан обьем бака',
+    'fuelConsumption': 'Неверный расход топлива'
+  }
   #brand;
   #model;
   #yearOfManufacturing;
@@ -9,82 +18,76 @@ class Car {
   #isStarted;
   #mileage;
   constructor(options) {
-    this.#brand = options.brand;
-    this.#model = options.model;
-    this.#yearOfManufacturing = options.yearOfManufacturing;
-    this.#maxSpeed = options.maxSpeed;
-    this.#maxFuelVolume = options.maxFuelVolume;
-    this.#fuelConsumption = options.fuelConsumption;
-    this.#currentFuelVolume = options.currentFuelVolume;
-    this.#isStarted = options.isStarted;
-    this.#mileage = options.mileage;
+    this.#brand = Car.checkStringLength(options.brand, this.#ERROR_MESSAGE['brand'], 1, 50);
+    this.#model = Car.checkStringLength(options.model, this.#ERROR_MESSAGE['model'], 1, 50);
+    this.#yearOfManufacturing = Car.checkNumber(options.yearOfManufacturing, this.#ERROR_MESSAGE['yearOfManufacturing'], 1900, this.#currentYear)
+    this.#maxSpeed = Car.checkNumber(options.maxSpeed, this.#ERROR_MESSAGE['maxSpeed'], 100, 300)
+    this.#maxFuelVolume = Car.checkNumber(options.maxFuelVolume, this.#ERROR_MESSAGE['maxFuelVolume'], 5, 20)
+    this.#fuelConsumption = Car.checkNumber(options.fuelConsumption, this.#ERROR_MESSAGE['fuelConsumption'], 0);
+    this.#currentFuelVolume = Car.checkNumber(options.currentFuelVolume, this.#ERROR_MESSAGE['fuelConsumption'], 0) || 0
+    if (typeof options.currentFuelVolume !== 'number' || options.currentFuelVolume < 0) {
+      throw new Error('Неверное тукущее значение топлива')
+    } else {
+      this.#currentFuelVolume = 0
+    }
+    if (typeof options.isStarted !== 'boolean') {
+      throw new Error('Неправильный тип isStarted');
+    } else {
+      this.#isStarted = options.isStarted;
+    }
+    if (typeof options.mileage !== 'number' || options.mileage < 0) {
+      throw new Error('Неверный пробег')
+    } else {
+      this.#mileage = 0
+    }
   }
 
   get brand() {
     return this.#brand
   }
 
-  set brand(value) {
-    if (Car.checkString(value, 1, 50)) {
-      throw new Error('Wrong brand');
-    }
-    this.#brand = value
+  set #brand(value) {
+    this.#brand = Car.checkStringLength(value, this.#ERROR_MESSAGE['brand'], 1, 50)
   }
 
   get model() {
     return this.#model
   }
 
-  set model(value) {
-    if (Car.checkString(value, 1, 50)) {
-      throw new Error('Wrong model');
-    }
-    this.#model = value
+  set #model(value) {
+    this.#model = Car.checkStringLength(value, this.#ERROR_MESSAGE['model'], 1, 50)
   }
 
   get yearOfManufacturing() {
     return this.#yearOfManufacturing
   }
 
-  set yearOfManufacturing(value) {
-    const currentYear = new Date().getFullYear();
-    if (Car.checkNumber(value, 1900, currentYear)) {
-      throw new Error('Wrong year of manufacturing');
-    }
-    this.#yearOfManufacturing = value
+  set #yearOfManufacturing(value) {
+    this.#yearOfManufacturing = Car.checkNumber(value, this.#ERROR_MESSAGE['yearOfManufacturing'], 1900, this.#currentYear)
   }
 
   get maxSpeed() {
     return this.#maxSpeed
   }
 
-  set maxSpeed(value) {
-    if (Car.checkNumber(value, 100, 300)) {
-      throw new Error('Wrong max speed');
-    }
-    this.#maxSpeed = value
+  set #maxSpeed(value) {
+    this.#maxSpeed = Car.checkNumber(value, this.#ERROR_MESSAGE['maxSpeed'], 100, 300)
   }
 
   get maxFuelVolume() {
     return this.#maxFuelVolume
   }
 
-  set maxFuelVolume(value) {
-    if (Car.checkNumber(value, 5, 20)) {
-      throw new Error('Wrong max fuel volume');
-    }
-    this.#maxFuelVolume = value
+  set #maxFuelVolume(value) {
+    this.#maxFuelVolume = Car.checkNumber(value, this.#ERROR_MESSAGE['maxFuelVolume'], 5, 20)
   }
 
   get fuelConsumption() {
     return this.#fuelConsumption
   }
 
-  set fuelConsumption(value) {
-    if (Car.checkNumber(value, 0)) {
-      throw new Error('Wrong fuel consumption');
-    }
-    this.#fuelConsumption = value
+  set #fuelConsumption(value) {
+    this.#fuelConsumption = Car.checkNumber(value, this.#ERROR_MESSAGE['fuelConsumption'], 0)
   }
 
   get currentFuelVolume() {
@@ -149,16 +152,27 @@ class Car {
     this.#currentFuelVolume -= spentFuel
   }
 
-  static checkString = (value, min, max) => {
-    return typeof value !== 'string' || min > value.length || value.length > max
+  static checkStringLength = (string, errorMessage, min, max) => {
+    if (typeof string !== 'string') {
+      throw new Error(errorMessage)
+    }
+    if (min > string.length || string.length > max) {
+      throw new Error(errorMessage)
+    }
+
+    return string
   }
 
-  static checkNumber = (value, min, max) => {
-    return typeof value !== 'number' || isNaN(value) || min > value || value > max
+  static checkNumber = (number, errorMessage, min, max) => {
+    if (typeof number !== 'number') {
+      throw new Error(errorMessage)
+    }
+    if (min > number || number > max) {
+      throw new Error(errorMessage)
+    }
+
+    return number
   }
 }
 
 module.exports = { Car }
-
-const car = {brand: 'audi', model: 's4', yearOfManufacturing: 2020, maxSpeed: 250, maxFuelVolume: 20, fuelConsumption: 4, currentFuelVolume: 0, isStarted: false, mileage: 0 }
-const newCar = new Car(car)
