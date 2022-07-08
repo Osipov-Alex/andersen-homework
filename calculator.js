@@ -191,19 +191,19 @@ class Calculator {
     }
 
     clear() {
-        this.firstOperand = ''
-        this.secondOperand = ''
+        this.firstOperand = '';
+        this.secondOperand = '';
         this.operation = null
         this.screen.setValue(0);
     }
 
     changeModule(firstValue, secondValue) {
         if (this.operation) {
-            secondValue = parseFloat(secondValue) * -1
+            secondValue = parseFloat(secondValue) * -1;
             this.secondOperand = secondValue
             this.screen.setValue(secondValue);
         } else {
-            firstValue = parseFloat(firstValue) * -1
+            firstValue = parseFloat(firstValue) * -1;
             this.firstOperand = firstValue
             this.screen.setValue(firstValue);
         }  
